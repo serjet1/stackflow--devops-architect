@@ -1,0 +1,694 @@
+/* ============================================
+   STACKFLOW - CSS STYLESHEET
+   Oil Brown & White Theme
+   ============================================ */
+
+:root {
+    --primary-brown: #5C4033;
+    --dark-brown: #3E2723;
+    --soft-brown: #7B5E57;
+    --off-white: #F8F6F2;
+    --pure-white: #FFFFFF;
+    --success-green: #2E7D32;
+    --error-red: #C62828;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--off-white);
+    color: var(--dark-brown);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.header {
+    background-color: var(--primary-brown);
+    color: var(--pure-white);
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 2px solid var(--dark-brown);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ============================================
+   UI PANEL
+   ============================================ */
+
+.ui-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.timer-container,
+.score-container {
+    background-color: var(--primary-brown);
+    color: var(--pure-white);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.timer-label,
+.score-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    text-transform: uppercase;
+}
+
+.timer,
+.score {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.timer.warning {
+    animation: pulse-warning 0.6s ease-in-out infinite;
+    color: #FFD700;
+}
+
+.restart-btn {
+    background-color: var(--primary-brown);
+    color: var(--pure-white);
+    border: 2px solid var(--dark-brown);
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.restart-btn:hover {
+    background-color: var(--soft-brown);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.restart-btn:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   GAME WRAPPER & BOARD
+   ============================================ */
+
+.game-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 600px;
+}
+
+.game-board {
+    background-color: var(--pure-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #E8E6E1;
+}
+
+.connections-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.nodes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/* ============================================
+   NODES
+   ============================================ */
+
+.node {
+    position: absolute;
+    background-color: var(--primary-brown);
+    color: var(--pure-white);
+    border: 2px solid var(--dark-brown);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    min-width: 120px;
+    text-align: center;
+    cursor: grab;
+    user-select: none;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.node:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    background-color: var(--soft-brown);
+}
+
+.node:active {
+    cursor: grabbing;
+}
+
+.node.dragging {
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+.node.correct {
+    border-color: var(--success-green);
+    box-shadow: 0 0 12px rgba(46, 125, 50, 0.3);
+}
+
+.node-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.node-status {
+    display: block;
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+/* ============================================
+   CONNECTION LINES
+   ============================================ */
+
+.connection-line {
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.connection-line.default {
+    stroke: var(--primary-brown);
+    opacity: 0.6;
+}
+
+.connection-line.success {
+    stroke: var(--success-green);
+    opacity: 1;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 4px rgba(46, 125, 50, 0.5));
+}
+
+.connection-line.error {
+    stroke: var(--error-red);
+    opacity: 1;
+    stroke-width: 3;
+}
+
+.connection-line.error-flash {
+    animation: error-flash 0.4s ease-out;
+}
+
+/* ============================================
+   LEVEL INFO
+   ============================================ */
+
+.level-info {
+    background-color: var(--pure-white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #E8E6E1;
+}
+
+.level-info h2 {
+    color: var(--primary-brown);
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.level-info p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: var(--off-white);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary-brown);
+}
+
+.info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-brown);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark-brown);
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    animation: fade-in 0.3s ease-out;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+.modal-content {
+    background-color: var(--pure-white);
+    border-radius: var(--radius);
+    padding: 40px;
+    max-width: 420px;
+    margin: auto;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10001;
+}
+
+.modal-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    display: block;
+    animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-content h2 {
+    color: var(--primary-brown);
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.modal-message {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.final-score {
+    background-color: var(--off-white);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid var(--primary-brown);
+}
+
+.final-score span:first-child {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-brown);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.score-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark-brown);
+}
+
+.modal-btn {
+    background-color: var(--primary-brown);
+    color: var(--pure-white);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+
+.modal-btn:hover {
+    background-color: var(--soft-brown);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.modal-btn:active {
+    transform: translateY(0);
+}
+
+.modal-content.success .modal-btn {
+    background-color: var(--success-green);
+}
+
+.modal-content.success .modal-btn:hover {
+    background-color: #1B5E20;
+}
+
+.modal-content.failure .modal-btn {
+    background-color: var(--error-red);
+}
+
+.modal-content.failure .modal-btn:hover {
+    background-color: #AD1457;
+}
+
+/* ============================================
+   TOOLTIP
+   ============================================ */
+
+.tooltip {
+    display: none;
+    position: fixed;
+    background-color: var(--dark-brown);
+    color: var(--pure-white);
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    z-index: 5000;
+    box-shadow: var(--shadow);
+    pointer-events: none;
+    animation: fade-in 0.2s ease-out;
+    max-width: 200px;
+}
+
+.tooltip.active {
+    display: block;
+}
+
+.tooltip-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.tooltip-content {
+    font-size: 11px;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes pulse-warning {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes error-flash {
+    0% {
+        stroke: var(--error-red);
+        filter: drop-shadow(0 0 8px rgba(198, 40, 40, 0.8));
+    }
+    50% {
+        filter: drop-shadow(0 0 4px rgba(198, 40, 40, 0.4));
+    }
+    100% {
+        stroke: var(--error-red);
+        filter: drop-shadow(0 0 8px rgba(198, 40, 40, 0.8));
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-4px);
+    }
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes success-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(46, 125, 50, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 16px;
+    }
+
+    .header {
+        padding: 16px 20px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+    }
+
+    .ui-panel {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .timer-container,
+    .score-container {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .timer-label,
+    .score-label {
+        min-width: 60px;
+    }
+
+    .restart-btn {
+        width: 100%;
+    }
+
+    .game-wrapper {
+        min-height: 500px;
+    }
+
+    .game-board {
+        height: 500px;
+    }
+
+    .node {
+        min-width: 100px;
+        padding: 12px 16px;
+        font-size: 12px;
+    }
+
+    .modal-content {
+        margin: 20px;
+        padding: 32px 24px;
+    }
+
+    .modal-icon {
+        font-size: 48px;
+    }
+
+    .modal-content h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 20px;
+    }
+
+    .timer,
+    .score {
+        font-size: 28px;
+    }
+
+    .game-wrapper {
+        min-height: 400px;
+    }
+
+    .game-board {
+        height: 400px;
+    }
+
+    .node {
+        min-width: 90px;
+        padding: 10px 12px;
+        font-size: 11px;
+    }
+
+    .level-info {
+        padding: 16px;
+    }
+
+    .level-info h2 {
+        font-size: 16px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
